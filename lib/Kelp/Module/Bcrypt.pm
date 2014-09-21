@@ -1,25 +1,29 @@
 package Kelp::Module::Bcrypt;
 
 use Kelp::Base 'Kelp::Module';
-use Crypt::Eksblowfish::Bcrypt qw(bcrypt en_base64);
+use Crypt::Eksblowfish::Bcrypt qw(bcrypt_hash en_base64);
 
-our $VERSION = 0.1;
+our $VERSION = 0.2;
 
 sub build {
     my ( $self, %args ) = @_;
 
-    my $cost = sprintf( '%02d', $args{cost} // 6 );
-    my $salt = $args{salt} // do {
-        my $num = 999999;
-        my $rnd = crypt( rand($num), rand($num) ) . crypt( rand($num), rand($num) );
-        en_base64( substr( $rnd, 4, 16 ) );
-    };
-    my $_set = join( '$', '$2a', $cost, $salt );
+    if ( !$args{salt} ) {
+        die "Must define salt for bcrypt";
+    }
 
     $self->register(
         bcrypt => sub {
-            my ( $app, $text, $settings ) = @_;
-            return bcrypt( $text, $settings // $_set );
+            my ( $app, $password ) = @_;
+            my $hash = bcrypt_hash(
+                {
+                    key_nul => 1,
+                    cost    => $args{cost} // 8,
+                    salt    => $args{salt},
+                },
+                $password
+            );
+            return en_base64($hash);
         }
     );
 }
@@ -67,10 +71,9 @@ This module adds bcrypt to your Kelp app
 
 =head1 REGISTERED METHODS
 
-=head2 bcrypt( $text, $settings )
+=head2 bcrypt( $text )
 
-Returns the bcrypted C<$text>. If the settings are not provided, it will
-use the options in the configuration.
+Returns the bcrypted C<$text>.
 
 =head1 AUTHOR
 
