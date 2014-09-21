@@ -37,21 +37,17 @@ This module adds bcrypt to your Kelp app
 
 # REGISTERED METHODS
 
-## bcrypt( $text, $settings )
+## bcrypt( $text )
 
-Returns the bcrypted `$text`. If the settings are not provided, it will
-use the options in the configuration.
+Returns the bcrypted `$text`.
 
 # AUTHOR
 
 Stefan G - mimimal <at< cpan.org
 
-```perl
-```
-
 # SEE ALSO
 
-[Kelp](http://search.cpan.org/perldoc?Kelp), [Crypt::Eksblowfish::Bcrypt](http://search.cpan.org/perldoc?Crypt::Eksblowfish::Bcrypt)
+[Kelp](https://metacpan.org/pod/Kelp), [Crypt::Eksblowfish::Bcrypt](https://metacpan.org/pod/Crypt::Eksblowfish::Bcrypt)
 
 # LICENSE
 
